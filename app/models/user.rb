@@ -4,6 +4,7 @@ class User < ApplicationRecord
     has_many :posts
     has_many :owners
     has_many :blogs, through: :owners
+    has_many :comments, as: :commentable
     # tricky one - blogs posted on by a user
     has_many :blog_posts, through: :posts, source: :blog
     validates :first_name, :last_name, presence: true, length: {minimum: 2}

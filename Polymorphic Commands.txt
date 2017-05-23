@@ -1,0 +1,170 @@
+C:\Users\Sammi\Desktop\DojoAssignments\Ruby\week_2>cd blogs_posts_messages_2
+
+C:\Users\Sammi\Desktop\DojoAssignments\Ruby\week_2\blogs_posts_messages_2>rails c
+Loading development environment (Rails 5.1.1)
+irb(main):001:0> exit
+
+C:\Users\Sammi\Desktop\DojoAssignments\Ruby\week_2\blogs_posts_messages_2>rails g model Comment content:string commentable:references{polymorphic}
+      invoke  active_record
+      create    db/migrate/20170523201426_create_comments.rb
+      create    app/models/comment.rb
+      invoke    test_unit
+      create      test/models/comment_test.rb
+      create      test/fixtures/comments.yml
+
+C:\Users\Sammi\Desktop\DojoAssignments\Ruby\week_2\blogs_posts_messages_2>rake db:migrate
+== 20170523201426 CreateComments: migrating ===================================
+-- create_table(:comments)
+   -> 0.0031s
+== 20170523201426 CreateComments: migrated (0.0044s) ==========================
+
+
+C:\Users\Sammi\Desktop\DojoAssignments\Ruby\week_2\blogs_posts_messages_2>atom .
+
+C:\Users\Sammi\Desktop\DojoAssignments\Ruby\week_2\blogs_posts_messages_2>rails c
+Loading development environment (Rails 5.1.1)
+irb(main):001:0> Comment.create(content: "This is a test comment", commentable: Message.second)
+SyntaxError: C:/Users/Sammi/Desktop/DojoAssignments/Ruby/week_2/blogs_posts_messages_2/app/models/message.rb:4: syntax error, unexpected tSYMBEG, expecting keyword_do or '{' or '('
+  has_many :comments, as :commentable
+                          ^
+        from (irb):1
+irb(main):002:0> Comment.create(content: "This is a test comment", commentable: Message.second)
+  Message Load (0.0ms)  SELECT  "messages".* FROM "messages" ORDER BY "messages"."id" ASC LIMIT ? OFFSET ?  [["LIMIT", 1], ["OFFSET", 1]]
+   (0.0ms)  begin transaction
+  SQL (1.0ms)  INSERT INTO "comments" ("content", "commentable_type", "commentable_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["content", "This is a test comment"], ["commentable_type", "Message"], ["commentable_id", 2], ["created_at", "2017-05-23 20:19:17.272458"], ["updated_at", "2017-05-23 20:19:17.272458"]]
+   (80.3ms)  commit transaction
+=> #<Comment id: 1, content: "This is a test comment", commentable_type: "Message", commentable_id: 2, created_at: "2017-05-23 20:19:17", updated_at: "2017-05-23 20:19:17">
+irb(main):003:0> Hirb.enable
+=> true
+irb(main):004:0> Comment.all
+  Comment Load (1.0ms)  SELECT "comments".* FROM "comments"
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+| id | content                | commentable_type | commentable_id | created_at              | updated_at              |
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+| 1  | This is a test comment | Message          | 2              | 2017-05-23 20:19:17 UTC | 2017-05-23 20:19:17 UTC |
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+1 row in set
+irb(main):005:0> Comment.create(content: "This is the second test comment", commentable: User.first)
+  User Load (0.0ms)  SELECT  "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT ?  [["LIMIT", 1]]
+   (0.0ms)  begin transaction
+  SQL (1.0ms)  INSERT INTO "comments" ("content", "commentable_type", "commentable_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["content", "This is the second test comment"], ["commentable_type", "User"], ["commentable_id", 1], ["created_at", "2017-05-23 20:19:52.970003"], ["updated_at", "2017-05-23 20:19:52.970003"]]
+   (68.9ms)  commit transaction
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| id | content                 | commentable_type | commentable_id | created_at              | updated_at              |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| 2  | This is the second t... | User             | 1              | 2017-05-23 20:19:52 UTC | 2017-05-23 20:19:52 UTC |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+1 row in set
+irb(main):006:0> Comment.create(content: "This is the third test comment", commentable: Post.tenth)
+NoMethodError: undefined method `tenth' for #<Class:0x7080258>
+        from (irb):6
+irb(main):007:0> Comment.create(content: "This is the third test comment", commentable: Post.fifth)
+  Post Load (0.0ms)  SELECT  "posts".* FROM "posts" ORDER BY "posts"."id" ASC LIMIT ? OFFSET ?  [["LIMIT", 1], ["OFFSET", 4]]
+   (1.0ms)  begin transaction
+  SQL (1.0ms)  INSERT INTO "comments" ("content", "commentable_type", "commentable_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["content", "This is the third test comment"], ["commentable_type", "Post"], ["commentable_id", 5], ["created_at", "2017-05-23 20:20:18.932687"], ["updated_at", "2017-05-23 20:20:18.932687"]]
+   (75.2ms)  commit transaction
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| id | content                 | commentable_type | commentable_id | created_at              | updated_at              |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| 3  | This is the third te... | Post             | 5              | 2017-05-23 20:20:18 UTC | 2017-05-23 20:20:18 UTC |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+1 row in set
+irb(main):008:0> Comment.create(content: "This is the fourth test comment", commentable: Blog.third)
+  Blog Load (0.0ms)  SELECT  "blogs".* FROM "blogs" ORDER BY "blogs"."id" ASC LIMIT ? OFFSET ?  [["LIMIT", 1], ["OFFSET", 2]]
+   (0.0ms)  begin transaction
+  SQL (1.0ms)  INSERT INTO "comments" ("content", "commentable_type", "commentable_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["content", "This is the fourth test comment"], ["commentable_type", "Blog"], ["commentable_id", 3], ["created_at", "2017-05-23 20:20:32.280356"], ["updated_at", "2017-05-23 20:20:32.280356"]]
+   (116.6ms)  commit transaction
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| id | content                 | commentable_type | commentable_id | created_at              | updated_at              |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| 4  | This is the fourth t... | Blog             | 3              | 2017-05-23 20:20:32 UTC | 2017-05-23 20:20:32 UTC |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+1 row in set
+irb(main):009:0> Comment.all
+  Comment Load (0.0ms)  SELECT "comments".* FROM "comments"
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| id | content                 | commentable_type | commentable_id | created_at              | updated_at              |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| 1  | This is a test comment  | Message          | 2              | 2017-05-23 20:19:17 UTC | 2017-05-23 20:19:17 UTC |
+| 2  | This is the second t... | User             | 1              | 2017-05-23 20:19:52 UTC | 2017-05-23 20:19:52 UTC |
+| 3  | This is the third te... | Post             | 5              | 2017-05-23 20:20:18 UTC | 2017-05-23 20:20:18 UTC |
+| 4  | This is the fourth t... | Blog             | 3              | 2017-05-23 20:20:32 UTC | 2017-05-23 20:20:32 UTC |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+4 rows in set
+irb(main):010:0> Comment.find(1)
+  Comment Load (0.0ms)  SELECT  "comments".* FROM "comments" WHERE "comments"."id" = ? LIMIT ?  [["id", 1], ["LIMIT", 1]]
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+| id | content                | commentable_type | commentable_id | created_at              | updated_at              |
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+| 1  | This is a test comment | Message          | 2              | 2017-05-23 20:19:17 UTC | 2017-05-23 20:19:17 UTC |
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+1 row in set
+irb(main):011:0> c= Comment.find(1)
+  Comment Load (0.0ms)  SELECT  "comments".* FROM "comments" WHERE "comments"."id" = ? LIMIT ?  [["id", 1], ["LIMIT", 1]]
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+| id | content                | commentable_type | commentable_id | created_at              | updated_at              |
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+| 1  | This is a test comment | Message          | 2              | 2017-05-23 20:19:17 UTC | 2017-05-23 20:19:17 UTC |
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+1 row in set
+irb(main):012:0> c.destroy
+   (0.0ms)  begin transaction
+  SQL (1.0ms)  DELETE FROM "comments" WHERE "comments"."id" = ?  [["id", 1]]
+   (86.3ms)  commit transaction
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+| id | content                | commentable_type | commentable_id | created_at              | updated_at              |
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+| 1  | This is a test comment | Message          | 2              | 2017-05-23 20:19:17 UTC | 2017-05-23 20:19:17 UTC |
++----+------------------------+------------------+----------------+-------------------------+-------------------------+
+1 row in set
+irb(main):013:0> Comment.all
+  Comment Load (0.0ms)  SELECT "comments".* FROM "comments"
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| id | content                 | commentable_type | commentable_id | created_at              | updated_at              |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| 2  | This is the second t... | User             | 1              | 2017-05-23 20:19:52 UTC | 2017-05-23 20:19:52 UTC |
+| 3  | This is the third te... | Post             | 5              | 2017-05-23 20:20:18 UTC | 2017-05-23 20:20:18 UTC |
+| 4  | This is the fourth t... | Blog             | 3              | 2017-05-23 20:20:32 UTC | 2017-05-23 20:20:32 UTC |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+3 rows in set
+irb(main):014:0> c=Comment.find(3)
+  Comment Load (1.0ms)  SELECT  "comments".* FROM "comments" WHERE "comments"."id" = ? LIMIT ?  [["id", 3], ["LIMIT", 1]]
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| id | content                 | commentable_type | commentable_id | created_at              | updated_at              |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| 3  | This is the third te... | Post             | 5              | 2017-05-23 20:20:18 UTC | 2017-05-23 20:20:18 UTC |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+1 row in set
+irb(main):015:0> c.update(conent = "This is revised content")
+   (0.0ms)  begin transaction
+   (0.0ms)  rollback transaction
+ArgumentError: When assigning attributes, you must pass a hash as an argument.
+        from (irb):15
+irb(main):016:0> c.erros
+NoMethodError: undefined method `erros' for #<Comment:0x6ce80c8>
+Did you mean?  errors
+        from (irb):16
+irb(main):017:0> c.errors
+=> #<ActiveModel::Errors:0x6d70d60 @base=#<Comment id: 3, content: "This is the third test comment", commentable_type: "Post", commentable_id: 5, created_at: "2017-05-23 20:20:18", updated_at: "2017-05-23 20:20:18">, @messages={}, @details={}>
+irb(main):018:0> c.update(content = "This is revised content")
+   (0.0ms)  begin transaction
+   (0.0ms)  rollback transaction
+ArgumentError: When assigning attributes, you must pass a hash as an argument.
+        from (irb):18
+irb(main):019:0> c.update(content:"This is revised content")
+   (0.0ms)  begin transaction
+  Post Load (0.0ms)  SELECT  "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT ?  [["id", 5], ["LIMIT", 1]]
+  SQL (2.0ms)  UPDATE "comments" SET "content" = ?, "updated_at" = ? WHERE "comments"."id" = ?  [["content", "This is revised content"], ["updated_at", "2017-05-23 20:22:04.311870"], ["id", 3]]
+   (58.3ms)  commit transaction
+=> true
+irb(main):020:0> Comment.all
+  Comment Load (0.0ms)  SELECT "comments".* FROM "comments"
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| id | content                 | commentable_type | commentable_id | created_at              | updated_at              |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+| 2  | This is the second t... | User             | 1              | 2017-05-23 20:19:52 UTC | 2017-05-23 20:19:52 UTC |
+| 3  | This is revised content | Post             | 5              | 2017-05-23 20:20:18 UTC | 2017-05-23 20:22:04 UTC |
+| 4  | This is the fourth t... | Blog             | 3              | 2017-05-23 20:20:32 UTC | 2017-05-23 20:20:32 UTC |
++----+-------------------------+------------------+----------------+-------------------------+-------------------------+
+3 rows in set
+irb(main):021:0>
